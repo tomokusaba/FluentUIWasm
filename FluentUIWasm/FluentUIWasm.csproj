@@ -91,5 +91,9 @@
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Fast.Components.FluentUI" Version="2.4.3" />
 	</ItemGroup>
-
+	<Target Name="DisableAnalyzers" BeforeTargets="CoreCompile">
+		<ItemGroup>
+			<Analyzer Remove="@(Analyzer)" Condition="'%(Filename)' == 'Microsoft.Fast.Components.FluentUI.Configuration'" />
+		</ItemGroup>
+	</Target>
 </Project>
