@@ -1,0 +1,92 @@
+@page "/fetchdata"
+@inject HttpClient Http
+
+<PageTitle>Weather forecast</PageTitle>
+
+<h1>Weather forecast</h1>
+
+<p>This component demonstrates fetching data from a service.</p>
+
+@if (forecasts == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <FluentDataGrid id="manualGrid" RowsData=@forecasts GridTemplateColumns="1fr 1fr 1fr 2fr" TGridItem=WeatherForecast>
+        <PropertyColumn Title="日付・時刻を表示する" Property="@(c => c!.Date)" Sortable="true" Align=Align.Left />
+        <PropertyColumn Title="温度ですよ. (C)" Property="@(c => c!.TemperatureC)" Sortable="true" Align=Align.Center />
+        <PropertyColumn Title="温度ですよ. (F)" Property="@(c => c!.TemperatureF)" Sortable="true" Align=Align.Center />
+        <PropertyColumn Title="お天気の様子ですね！！" Property="@(c => c!.Summary)" Sortable="true" Align=Align.Right />
+    </FluentDataGrid>
+    <FluentDataGrid RowsData="@forecasts" GridTemplateColumns="1fr 1fr 1fr 2fr" TGridItem=WeatherForecast>
+        <TemplateColumn>
+            <HeaderCellItemTemplate>
+                <div class="title-cell">
+                    日付・時刻を表示する
+                </div>
+            </HeaderCellItemTemplate>
+            <ChildContent>
+                <div class="cell">
+                    @context.Date
+                </div>
+            </ChildContent>
+        </TemplateColumn>
+        <TemplateColumn>
+            <HeaderCellItemTemplate>
+                <div class="title-cell">
+                    温度ですよ. (C)
+                </div>
+            </HeaderCellItemTemplate>
+            <ChildContent>
+                <div class="cell">
+                    @context.TemperatureC
+                </div>
+            </ChildContent>
+        </TemplateColumn>
+        <TemplateColumn>
+            <HeaderCellItemTemplate>
+                <div class="title-cell">
+                    温度ですよ. (F)
+                </div>
+            </HeaderCellItemTemplate>
+            <ChildContent>
+                <div class="cell">
+                    @context.TemperatureF
+                </div>
+            </ChildContent>
+        </TemplateColumn>
+        <TemplateColumn>
+            <HeaderCellItemTemplate>
+                <div class="title-cell">
+                    お天気の様子ですね！！
+                </div>
+            </HeaderCellItemTemplate>
+            <ChildContent>
+                <div class="cell">
+                    @context.Summary
+                </div>
+            </ChildContent>
+        </TemplateColumn>
+    </FluentDataGrid>
+}
+
+@code {
+    private IQueryable<WeatherForecast>? forecasts;
+
+    protected override async Task OnInitializedAsync()
+    {
+        forecasts = (await Http.GetFromJsonAsync<List<WeatherForecast>>("sample-data/weather.json"))!.AsQueryable();
+    }
+
+    public class WeatherForecast
+    {
+        public DateTime Date { get; set; }
+
+        public int TemperatureC { get; set; }
+
+        public string? Summary { get; set; }
+
+        public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+    }
+}

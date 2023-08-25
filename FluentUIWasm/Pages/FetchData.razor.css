@@ -1,0 +1,9 @@
+﻿.title-cell {
+    word-break: break-word;
+    white-space: normal;
+}
+
+.cell {
+    word-break: break-word;
+    white-space: normal;
+}
